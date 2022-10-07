@@ -14,9 +14,10 @@ interface Prop {
   activity: Activity | undefined;
   handleCloseEditForm: () => void;
   handleCreateOrEditActivity: (activity: Activity) => void;
+  submitting: boolean;
 }
 
-export default function CardEdit({ activity: selectedActivity, handleCloseEditForm, handleCreateOrEditActivity }: Prop) {
+export default function CardEdit({ activity: selectedActivity, handleCloseEditForm, handleCreateOrEditActivity, submitting }: Prop) {
 
   const initialState = selectedActivity ?? {
     id: '',
@@ -83,6 +84,7 @@ export default function CardEdit({ activity: selectedActivity, handleCloseEditFo
           id="component-outlined"
           value={activity.date}
           onChange={handleChange}
+          type='date'
           name='date'
           label="Date"
         />
@@ -111,6 +113,7 @@ export default function CardEdit({ activity: selectedActivity, handleCloseEditFo
         <Button
           variant="contained"
           type='submit'
+          onClick={() => submitting}
         >
           Submite
         </Button>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -6,6 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Prop {
   id: string;
@@ -20,7 +21,7 @@ interface Prop {
 
 export default function AlignItemsList({ id, title, date, description, location, venue, selectActivity, handleDeleteActivity }: Prop) {
   return (
-    <List sx={{ width: '100%', maxWidth: 460, bgcolor: 'background.paper' }}>
+    <List sx={{ width: '100%', maxWidth: 560, bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
         <ListItemText
           primary={title}
@@ -35,8 +36,8 @@ export default function AlignItemsList({ id, title, date, description, location,
             </Typography>
           }
         />
-        <Button onClick={() => selectActivity(id)} variant="contained" endIcon={<SendIcon />} >View</Button>
-        <Button onClick={() => handleDeleteActivity(id)} variant="contained">Delete</Button>
+        <Button onClick={() => selectActivity(id)} sx={{ marginRight: '20px' }} variant="contained" endIcon={<SendIcon />} >View</Button>
+        <Button onClick={() => handleDeleteActivity(id)} variant="contained" endIcon={<DeleteIcon />}>Delete</Button>
       </ListItem>
       <Divider variant="inset" component="li" />
     </List>

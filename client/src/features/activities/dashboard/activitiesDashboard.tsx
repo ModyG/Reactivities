@@ -15,10 +15,11 @@ interface Prop {
   handleCloseEditForm: () => void;
   handleCreateOrEditActivity: (activity: Activity) => void;
   handleDeleteActivity: (id: string) => void;
+  submitting: boolean;
 }
 
 const ActivityDashboard = ({ activities, selectedActivity, selectActivity, cancelActivity, editMode, handleOpenEditForm, 
-      handleCloseEditForm, handleCreateOrEditActivity, handleDeleteActivity }: Prop) => {
+      handleCloseEditForm, handleCreateOrEditActivity, handleDeleteActivity, submitting }: Prop) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={8} md={8}>
@@ -40,7 +41,7 @@ const ActivityDashboard = ({ activities, selectedActivity, selectActivity, cance
             activity={selectedActivity}
             handleCloseEditForm={handleCloseEditForm}
             handleCreateOrEditActivity={handleCreateOrEditActivity}
-
+            submitting={submitting}
           />}
       </Grid>
     </Grid>
