@@ -8,16 +8,12 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { Activity } from '../../../app/models/activity';
+import { useStore } from '../../../app/stores/store';
+import { observer } from 'mobx-react-lite';
 
-interface Prop {
-  activity: Activity | undefined;
-  handleCloseEditForm: () => void;
-  handleCreateOrEditActivity: (activity: Activity) => void;
-  submitting: boolean;
-}
-
-export default function CardEdit({ activity: selectedActivity, handleCloseEditForm, handleCreateOrEditActivity, submitting }: Prop) {
+export default observer(function CardEdit() {
+  const { activityStore } = useStore();
+  const { selectedActivity, closeForm, loading, createActivity, updateActivity } = activityStore;
 
   const initialState = selectedActivity ?? {
     id: '',
@@ -33,8 +29,8 @@ export default function CardEdit({ activity: selectedActivity, handleCloseEditFo
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    console.log(activity);
-    handleCreateOrEditActivity(activity);
+    //console.log(activity);
+    activity.id ? updateActivity(activity) : createActivity(activity);
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -113,18 +109,18 @@ export default function CardEdit({ activity: selectedActivity, handleCloseEditFo
         <Button
           variant="contained"
           type='submit'
-          onClick={() => submitting}
+          onClick={() => loading}
         >
           Submite
         </Button>
         <Button
           variant="outlined"
-          onClick={handleCloseEditForm}
+          onClick={closeForm}
         >
           Cencel
         </Button>
       </Stack>
     </form>
   );
-}
+})
 

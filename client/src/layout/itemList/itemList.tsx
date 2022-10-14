@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useStore } from '../../app/stores/store';
+import { observer } from 'mobx-react-lite';
+import { LoadingButton } from '@mui/lab';
 
 interface Prop {
   id: string;
@@ -15,11 +18,12 @@ interface Prop {
   date: string;
   location: string;
   venue: string;
-  selectActivity: (id: string) => void;
-  handleDeleteActivity: (id: string) => void;
 }
 
-export default function AlignItemsList({ id, title, date, description, location, venue, selectActivity, handleDeleteActivity }: Prop) {
+export default observer(function AlignItemsList({ id, title, date, description, location, venue }: Prop) {
+  const { activityStore } = useStore();
+  const { selectActivity, deleteActivity, loading } = activityStore;
+
   return (
     <List sx={{ width: '100%', maxWidth: 560, bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
@@ -36,10 +40,24 @@ export default function AlignItemsList({ id, title, date, description, location,
             </Typography>
           }
         />
-        <Button onClick={() => selectActivity(id)} sx={{ marginRight: '20px' }} variant="contained" endIcon={<SendIcon />} >View</Button>
-        <Button onClick={() => handleDeleteActivity(id)} variant="contained" endIcon={<DeleteIcon />}>Delete</Button>
+        <Button
+          onClick={() => selectActivity(id)}
+          sx={{ marginRight: '20px' }}
+          variant="contained"
+          endIcon={<SendIcon />}
+        >
+          View
+        </Button>
+        <LoadingButton
+          onClick={() => deleteActivity(id)}
+          variant="contained"
+          endIcon={<DeleteIcon />}
+          loading={loading}
+        >
+          Delete
+        </LoadingButton>
       </ListItem>
       <Divider variant="inset" component="li" />
     </List>
   );
-}
+})

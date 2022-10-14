@@ -1,29 +1,23 @@
 import React from "react";
-import { Activity } from "../../../app/models/activity";
 //import RecipeReviewCard from "../../../layout/complexCard/complesCard";
 import { ListItem } from '@mui/material';
 import AlignItemsList from "../../../layout/itemList/itemList";
+import { useStore } from "../../../app/stores/store";
 
-interface Prop {
-  activities: Activity[];
-  selectActivity: (id: string) => void;
-  handleDeleteActivity: (id: string) => void; 
-}
-
-const ActivityList = ({ activities, selectActivity, handleDeleteActivity }: Prop) => {
+const ActivityList = () => {
+  const { activityStore } = useStore();
+  const {activitiesByDate} = activityStore;
   return (
     <>
-      {activities.map(activity => (
+      {activitiesByDate.map(activity => (
         <ListItem key={activity.id}>
-          <AlignItemsList 
-            selectActivity={selectActivity}
+          <AlignItemsList
             id={activity.id}
             title={activity.title}
             date={activity.date}
             description={activity.description}
             location={activity.city}
             venue={activity.venue}
-            handleDeleteActivity= {handleDeleteActivity}
           />
         </ListItem>
       ))}

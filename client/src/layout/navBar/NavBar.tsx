@@ -12,15 +12,14 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useStore } from '../../app/stores/store';
 
 const pages = ['Activities'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-interface Prop {
-  handleOpenEditForm: () => void;
-}
+const ResponsiveAppBar = () => {
+  const { activityStore } = useStore();
 
-const ResponsiveAppBar = ({ handleOpenEditForm }: Prop) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -131,7 +130,7 @@ const ResponsiveAppBar = ({ handleOpenEditForm }: Prop) => {
             ))}
             <Button
               key="Create Activity"
-              onClick={handleOpenEditForm}
+              onClick={() => activityStore.openForm()}
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
               Create Activity

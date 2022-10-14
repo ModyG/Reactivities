@@ -15,11 +15,12 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HouseboatIcon from '@mui/icons-material/Houseboat';
-import { Activity } from '../../app/models/activity';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useStore } from '../../app/stores/store';
+import LoadingCompo from '../loading/loadingComponent';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -36,19 +37,16 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-interface Prop {
-  activity: Activity;
-  cancelActivity: () => void;
-  handleOpenEditForm: (id: string) => void;
-}
+export default function RecipeReviewCard() {
+  const {activityStore} = useStore();
+  const {selectedActivity: activity, openForm, cancelSelectedActivity} = activityStore;
 
-export default function RecipeReviewCard({ activity, cancelActivity, handleOpenEditForm }: Prop) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+  if(!activity) return <LoadingCompo content={'Olla'}/>;
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
@@ -106,11 +104,11 @@ export default function RecipeReviewCard({ activity, cancelActivity, handleOpenE
         <Button
           variant="contained"
           endIcon={<EditIcon />}
-          onClick={() => handleOpenEditForm(activity.id)}
+          onClick={() => openForm(activity.id)}
         >
           Edit
         </Button>
-        <Button onClick={cancelActivity} variant="outlined" startIcon={<DeleteIcon />}>
+        <Button onClick={cancelSelectedActivity} variant="outlined" startIcon={<DeleteIcon />}>
           Cancel
         </Button>
       </Stack>
