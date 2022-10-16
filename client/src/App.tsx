@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import ResponsiveAppBar from './layout/navBar/NavBar';
 import ActivityDashboard from './features/activities/dashboard/activitiesDashboard';
-import LoadingCompo from './layout/loading/loadingComponent';
 import { useStore } from './app/stores/store';
 import { observer } from 'mobx-react-lite';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from './features/home/HomePage';
+import ActivityForm from './features/activities/form/ActivityForm';
+import ActivityDetails from './features/activities/details/activityDetails';
 
 const App = () => {
   const { activityStore } = useStore();
@@ -11,12 +14,16 @@ const App = () => {
     activityStore.loadActivities();
   }, [activityStore]);
 
-  if (activityStore.loadingInitial) return <LoadingCompo content="Loading App..." />
-
   return (
     <>
-      <ResponsiveAppBar/>
-      <ActivityDashboard />
+      <ResponsiveAppBar />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/Activities' element={<ActivityDashboard />} />
+        <Route path='/Activities/:id' element={<ActivityDetails />} />
+        <Route path='/CreateActivity' element={<ActivityForm />} />
+        <Route path='/CreateActivity/manage/:id' element={<ActivityForm />} />
+      </Routes>
     </>
   );
 }

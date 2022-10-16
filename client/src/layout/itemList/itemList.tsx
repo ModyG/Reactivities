@@ -22,7 +22,7 @@ interface Prop {
 
 export default observer(function AlignItemsList({ id, title, date, description, location, venue }: Prop) {
   const { activityStore } = useStore();
-  const { selectActivity, deleteActivity, loading } = activityStore;
+  const { deleteActivity, loading } = activityStore;
 
   return (
     <List sx={{ width: '100%', maxWidth: 560, bgcolor: 'background.paper' }}>
@@ -41,7 +41,7 @@ export default observer(function AlignItemsList({ id, title, date, description, 
           }
         />
         <Button
-          onClick={() => selectActivity(id)}
+          href={`/Activities/${id}`}
           sx={{ marginRight: '20px' }}
           variant="contained"
           endIcon={<SendIcon />}

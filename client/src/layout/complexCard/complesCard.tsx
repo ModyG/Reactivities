@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,6 +21,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useStore } from '../../app/stores/store';
 import LoadingCompo from '../loading/loadingComponent';
+import { useParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -37,16 +39,23 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function RecipeReviewCard() {
-  const {activityStore} = useStore();
-  const {selectedActivity: activity, openForm, cancelSelectedActivity} = activityStore;
-
+export default observer(function RecipeReviewCard() {
+  const { activityStore } = useStore();
+  const { selectedActivity: activity, loadActivity, loadingInitial } = activityStore;
+  const { id } = useParams();
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  if(!activity) return <LoadingCompo content={'Olla'}/>;
+
+  useEffect(() => {
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
+
+
+  if (loadingInitial || !activity) return <LoadingCompo content={'Olla'} />;
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
@@ -104,14 +113,18 @@ export default function RecipeReviewCard() {
         <Button
           variant="contained"
           endIcon={<EditIcon />}
-          onClick={() => openForm(activity.id)}
+          href={`/CreateActivity/manage/${id}`}
         >
           Edit
         </Button>
-        <Button onClick={cancelSelectedActivity} variant="outlined" startIcon={<DeleteIcon />}>
+        <Button
+          variant="outlined"
+          startIcon={<DeleteIcon />}
+          href={`/Activities`}
+        >
           Cancel
         </Button>
       </Stack>
     </Card>
   );
-}
+})

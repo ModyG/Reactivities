@@ -1,8 +1,5 @@
-import React, { ChangeEvent, useState } from 'react';
-//import FilledInput from '@mui/material/FilledInput';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
-//import FormHelperText from '@mui/material/FormHelperText';
-//import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
@@ -10,12 +7,16 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
+import { useNavigate, useParams } from 'react-router-dom';
+import LoadingCompo from '../../../layout/loading/loadingComponent';
+import { v4 as uuid } from 'uuid';
 
 export default observer(function CardEdit() {
+  let navigate = useNavigate();
   const { activityStore } = useStore();
-  const { selectedActivity, closeForm, loading, createActivity, updateActivity } = activityStore;
-
-  const initialState = selectedActivity ?? {
+  const { loading, createActivity, updateActivity, loadActivity, loadingInitial } = activityStore;
+  const { id } = useParams();
+  const [activity, setActivity] = useState({
     id: '',
     title: '',
     category: '',
@@ -23,20 +24,36 @@ export default observer(function CardEdit() {
     date: '',
     city: '',
     venue: ''
-  }
+  });
 
-  const [activity, setActivity] = useState(initialState);
+  useEffect(() => {
+    if (id) loadActivity(id).then(activity => setActivity(activity!));
+  }, [id, loadActivity]);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     //console.log(activity);
-    activity.id ? updateActivity(activity) : createActivity(activity);
+    if (activity.id.length === 0) {
+      let newActivity = {
+        ...activity,
+        id: uuid()
+      }
+      createActivity(newActivity).then(() => {
+        navigate(`/Activities/${newActivity.id}`);
+      })
+    } else {
+      updateActivity(activity).then(() => {
+        navigate(`/Activities/${activity.id}`);
+      })
+    }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value })
   }
+
+  if (loadingInitial) return <LoadingCompo content='Loading activity...' />
 
   return (
     <form
@@ -115,7 +132,7 @@ export default observer(function CardEdit() {
         </Button>
         <Button
           variant="outlined"
-          onClick={closeForm}
+          href='/Activities'
         >
           Cencel
         </Button>
